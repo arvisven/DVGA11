@@ -3,35 +3,75 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.*;
 
-public class View {
+public class View implements Observer{
 	
-	String player1;
-	String player2;
+	int SIZE = 3;
+	String player1Name;
+	String player2Name;
 	JButton addPlayer;
 	JButton showName;
 	JFrame mainWindow;
+	JLabel p1NameLabel, p2NameLabel, infoTextLabel;
+	JPanel scoreBoard, gameBoard, infoBoard;
+	JButton buttons[][] = new JButton[3][3];
+	
+	JMenuBar menuBar;
+	JMenu file, about;
+	JMenuItem quit, newGame;
+	
 	
 	public View() {
 		
+		
 		mainWindow = new JFrame();
 		mainWindow.setLayout(new BorderLayout());
+		scoreBoard = new JPanel(new GridLayout());
+		gameBoard = new JPanel(new GridLayout(SIZE, SIZE));
+		infoBoard = new JPanel();
+		infoTextLabel = new JLabel("Welcome!");
+		infoBoard.add(infoTextLabel);
 		
-//		player1 = JOptionPane.showInputDialog(parent, "What is your name?", null);
+		menuBar = new JMenuBar();
+		file = new JMenu("File");
+		about = new JMenu("About");
+		quit = new JMenuItem("Quit");
+		newGame = new JMenuItem("New Game");
+		file.add(newGame);
+		file.add(quit);
+		menuBar.add(file);
+		menuBar.add(about);
 		
+		mainWindow.setJMenuBar(menuBar);
 		
-		addPlayer = new JButton("Lägg till spelar");
-//		addPlayer.addActionListener(this);
+		for(int i = 0; i < SIZE; i++) {
+			
+			for(int x = 0; x < SIZE; x++) {
+				
+				buttons[i][x] = new JButton();
+				gameBoard.add(buttons[i][x]);
+				buttons[i][x].add(Controller.actionlistener)
+				//buttons[i][x].setEnabled(false);
+				
+			}
 		
-		showName = new JButton("Visa namnet");
+		}
 		
 		startUp(mainWindow);
 		
-		mainWindow.add(addPlayer, BorderLayout.EAST);
-		mainWindow.add(showName, BorderLayout.WEST);
-		mainWindow.setTitle("Tic - Tac - Toe, ALPHA 1.0");
+		p1NameLabel = new JLabel(player1Name);
+		p2NameLabel = new JLabel(player2Name);			
+		scoreBoard.add(p1NameLabel);
+		scoreBoard.add(p2NameLabel);
+		mainWindow.add(scoreBoard, BorderLayout.NORTH);
+		mainWindow.add(gameBoard, BorderLayout.CENTER);
+		mainWindow.add(infoBoard, BorderLayout.SOUTH);
+		mainWindow.setTitle("Tic - Tac - Toe, ALPHA 1.1");
 		mainWindow.setSize(500,500);
 		mainWindow.setVisible(true);
 		mainWindow.setDefaultCloseOperation(mainWindow.EXIT_ON_CLOSE);
@@ -50,37 +90,26 @@ public class View {
 	    popup.add(labels, BorderLayout.WEST);
 	
 	    JPanel textFields = new JPanel(new GridLayout(0,1,2,2));
-	    JTextField playerUno = new JTextField("Player1");
-	    JTextField playerDos = new JTextField("Player2");
-	    textFields.add(playerUno);
-	    textFields.add(playerDos);
+	    JTextField player1SetName = new JTextField("Player1");
+	    JTextField player2SetName = new JTextField("Player2");
+	    textFields.add(player1SetName);
+	    textFields.add(player2SetName);
+	    
 	    
 	    popup.add(textFields, BorderLayout.CENTER);
 	    
 	    JOptionPane.showMessageDialog(mainWindow, popup, "Choose your names", JOptionPane.QUESTION_MESSAGE);
-	
+	    
+	    player1Name = player1SetName.getText();
+	    player2Name = player2SetName.getText();
+	}
+
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		
+		
+		
 	}
 	
 }
-
-
-//public class CreateDialogFromOptionPane {
-//
-//  public static void main(final String[] args) {
-//      final JFrame parent = new JFrame();
-//      JButton button = new JButton();
-//
-//      button.setText("Click me to show dialog!");
-//      parent.add(button);
-//      parent.pack();
-//      parent.setVisible(true);
-//
-//      button.addActionListener(new java.awt.event.ActionListener() {
-//          @Override
-//          public void actionPerformed(java.awt.event.ActionEvent evt) {
-//              String name = JOptionPane.showInputDialog(parent,
-//                      "What is your name?", null);
-//          }
-//      });
-//  }
-//}
