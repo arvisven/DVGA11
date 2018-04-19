@@ -19,14 +19,14 @@ public class View implements Observer{
 	JFrame mainWindow;
 	JLabel p1NameLabel, p2NameLabel, infoTextLabel;
 	JPanel scoreBoard, gameBoard, infoBoard;
-	JButton buttons[][] = new JButton[3][3];
+	JButton buttons[][] = new JButton[SIZE][SIZE];
 	
 	JMenuBar menuBar;
 	JMenu file, about;
 	JMenuItem quit, newGame;
 	
 	
-	public View() {
+	public View(Controller ctrl) {
 		
 		
 		mainWindow = new JFrame();
@@ -55,7 +55,8 @@ public class View implements Observer{
 				
 				buttons[i][x] = new JButton();
 				gameBoard.add(buttons[i][x]);
-				buttons[i][x].add(Controller.actionlistener)
+				buttons[i][x].addActionListener(ctrl);
+				buttons[i][x].setBackground(java.awt.Color.WHITE);
 				//buttons[i][x].setEnabled(false);
 				
 			}
@@ -107,8 +108,47 @@ public class View implements Observer{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		System.out.println(((Model)arg0).SIZE);
+//		Model.colors tempLäge = (Model.colors)arg1;
+//		if(tempLäge == Model.colors.RÖD)
+//		{
+//			System.out.println("asdsd");
+//			
+//		}
+		if(((Model)arg0).playerTurn()) {
 		
+		for(int i = 0; i < SIZE; i++) {
+			for(int x = 0; x < SIZE; x++) {
+				
+				if(arg1 == buttons[i][x]) {
+					
+					buttons[i][x].setBackground(java.awt.Color.RED);
+				}
+				
+			}
+			
+		}
+		} else {
+			
+			for(int i = 0; i < SIZE; i++) {
+				for(int x = 0; x < SIZE; x++) {
+					
+					if(arg1 == buttons[i][x]) {
+						
+						buttons[i][x].setBackground(java.awt.Color.BLUE);
+					}
+					
+				}
+				
+			}
+		}
 		
+	}
+
+
+	public void changeColor(JButton clickedButton) {
+		
+		clickedButton.setBackground(java.awt.Color.RED);
 		
 	}
 	
