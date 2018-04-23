@@ -26,15 +26,15 @@ public class View implements Observer{
 	JMenuItem quit, newGame;
 	
 	
-	public View(Controller ctrl) {
+	public View(Controller ctrl, Controller newRound) {
 		
-		
+		startUp(mainWindow);
 		mainWindow = new JFrame();
 		mainWindow.setLayout(new BorderLayout());
 		scoreBoard = new JPanel(new GridLayout());
 		gameBoard = new JPanel(new GridLayout(SIZE, SIZE));
 		infoBoard = new JPanel();
-		infoTextLabel = new JLabel("Welcome!");
+		infoTextLabel = new JLabel("Welcome! " + player1Name + " start.");
 		infoBoard.add(infoTextLabel);
 		
 		menuBar = new JMenuBar();
@@ -42,6 +42,7 @@ public class View implements Observer{
 		about = new JMenu("About");
 		quit = new JMenuItem("Quit");
 		newGame = new JMenuItem("New Game");
+		newGame.addActionListener(newRound);
 		file.add(newGame);
 		file.add(quit);
 		menuBar.add(file);
@@ -49,21 +50,21 @@ public class View implements Observer{
 		
 		mainWindow.setJMenuBar(menuBar);
 		
-		for(int i = 0; i < SIZE; i++) {
+		for(int y = 0; y < SIZE; y++) {
 			
 			for(int x = 0; x < SIZE; x++) {
 				
-				buttons[i][x] = new JButton();
-				gameBoard.add(buttons[i][x]);
-				buttons[i][x].addActionListener(ctrl);
-				buttons[i][x].setBackground(java.awt.Color.WHITE);
-				//buttons[i][x].setEnabled(false);
+				buttons[x][y] = new JButton();
+				gameBoard.add(buttons[x][y]);
+				buttons[x][y].addActionListener(ctrl);
+				buttons[x][y].setBackground(java.awt.Color.WHITE);
+				
 				
 			}
 		
 		}
 		
-		startUp(mainWindow);
+		
 		
 		p1NameLabel = new JLabel(player1Name);
 		p2NameLabel = new JLabel(player2Name);			
@@ -108,48 +109,57 @@ public class View implements Observer{
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		System.out.println(((Model)arg0).SIZE);
+//		System.out.println(((Model)arg0).SIZE);
 //		Model.colors tempLäge = (Model.colors)arg1;
 //		if(tempLäge == Model.colors.RÖD)
 //		{
 //			System.out.println("asdsd");
 //			
-//		}
-		if(((Model)arg0).playerTurn()) {
-		
-		for(int i = 0; i < SIZE; i++) {
-			for(int x = 0; x < SIZE; x++) {
+//		}		
+try {
+		for(int x = 0; x < SIZE; x++) {
+			for(int y = 0; y < SIZE; y++) {
 				
-				if(arg1 == buttons[i][x]) {
+				if(arg1 == buttons[x][y]) {
 					
-					buttons[i][x].setBackground(java.awt.Color.RED);
-				}
-				
-			}
-			
-		}
-		} else {
-			
-			for(int i = 0; i < SIZE; i++) {
-				for(int x = 0; x < SIZE; x++) {
+					if(((Model)arg0).playerTurn()) {
 					
-					if(arg1 == buttons[i][x]) {
+						//buttons[i][x].setBackground(java.awt.Color.RED);
+						changeColor(buttons[x][y], java.awt.Color.RED);
+					
+					} else {
 						
-						buttons[i][x].setBackground(java.awt.Color.BLUE);
+						//buttons[i][x].setBackground(java.awt.Color.BLUE);
+						changeColor(buttons[x][y], java.awt.Color.BLUE);
 					}
+					buttons[x][y].setEnabled(false);
+					((Model)arg0).saveMove(x, y);
 					
 				}
 				
 			}
+			
 		}
 		
-	}
+		if((boolean)arg1) {
+			
+			drawView();
+		}
+} catch (ClassCastException e1) {
+	
+}
+}
 
 
-	public void changeColor(JButton clickedButton) {
+	public void changeColor(JButton clickedButton, java.awt.Color color) {
 		
-		clickedButton.setBackground(java.awt.Color.RED);
+		clickedButton.setBackground(color);
 		
 	}
 	
+	public void drawView() {
+		
+		infoTextLabel.setText("It's a draw!");
+		
+	}
 }
